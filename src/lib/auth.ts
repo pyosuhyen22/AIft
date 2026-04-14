@@ -24,12 +24,11 @@ export const authOptions: AuthOptions = {
 
         if (!isValid) return null;
 
-        // image 필드를 명시적으로 반환 (null일 수도 있음)
+        // image 필드를 아예 제거하여 타입 에러 방지
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          image: user.image || null,
         };
       },
     }),
