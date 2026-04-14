@@ -4,9 +4,10 @@ import { User, ThumbsUp, MessageSquare, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 
-export default async function PostDetailPage({ params }: { params: { id: string } }) {
+export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const post = await prisma.post.update({
-    where: { id: (await params).id },
+    where: { id },
     data: { views: { increment: 1 } },
     include: { author: true, _count: { select: { comments: true, likes: true } } }
   }).catch(() => null);
@@ -20,10 +21,7 @@ export default async function PostDetailPage({ params }: { params: { id: string 
         <h1 className="text-4xl font-extrabold text-gray-900">{post.title}</h1>
         <div className="flex items-center space-x-4 py-4 border-y border-gray-100">
           <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600"><User size={20} /></div>
-          <div>
-            <p className="font-bold">{post.author?.name || "익명"}</p>
-            <p className="text-xs text-gray-500">{format(new Date(post.createdAt), "yyyy. MM. dd.", { locale: ko })}</p>
-          </div>
+          <div><p className="font-bold">{post.author?.name || "익명"}</p><p className="text-xs text-gray-500">{format(new Date(post.createdAt), "yyyy. MM. dd.", { locale: ko })}</p></div>
         </div>
       </header>
       <div className="prose lg:prose-xl max-w-none mb-16" dangerouslySetInnerHTML={{ __html: post.content }} />
