@@ -6,7 +6,7 @@ model User {
   name      String?
   email     String?   @unique
   password  String?
-  image     String?   // 여기에 image 필드를 추가했습니다!
+  image     String?   // 필드 추가 확인
   posts     Post[]
   comments  Comment[]
   likes     Like[]

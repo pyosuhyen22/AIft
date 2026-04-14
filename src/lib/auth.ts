@@ -13,20 +13,37 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+        
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
         if (!user || !user.password) return null;
+
         const isValid = await bcrypt.compare(credentials.password, user.password);
+
         if (!isValid) return null;
-        return { id: user.id, email: user.email, name: user.name, image: user.image };
+
+        // image 필드를 명시적으로 반환 (null일 수도 있음)
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image || null,
+        };
       },
     }),
   ],
   callbacks: {
     async session({ session, token }) {
-      if (token && session.user) { (session.user as any).id = token.sub; }
+      if (token && session.user) {
+        (session.user as any).id = token.sub;
+      }
       return session;
     },
   },
-  pages: { signIn: "/auth/signin" },
+  pages: {
+    signIn: "/auth/signin",
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
