@@ -1,17 +1,12 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql", url = env("DATABASE_URL") }
 
 model User {
   id        String    @id @default(cuid())
   name      String?
   email     String?   @unique
   password  String?
+  image     String?   // 여기에 image 필드를 추가했습니다!
   posts     Post[]
   comments  Comment[]
   likes     Like[]
