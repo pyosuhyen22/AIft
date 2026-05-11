@@ -41,10 +41,14 @@ export async function POST(req: Request) {
       { message: "회원가입 성공", userId: user.id },
       { status: 201 }
     );
-  } catch (error) {
-    console.error("Signup error:", error);
+  } catch (error: any) {
+    console.error("Signup error details:", error);
+    // Prisma 관련 에러 메시지 세분화
+    if (error.code === 'P2002') {
+      return NextResponse.json({ message: "이미 사용 중인 이메일입니다." }, { status: 400 });
+    }
     return NextResponse.json(
-      { message: "서버 오류가 발생했습니다." },
+      { message: `서버 오류: ${error.message || "알 수 없는 오류"}` },
       { status: 500 }
     );
   }

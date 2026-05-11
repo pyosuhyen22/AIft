@@ -11,11 +11,14 @@ export default function SignUpPage() {
       body: JSON.stringify(Object.fromEntries(formData)),
       headers: { "Content-Type": "application/json" },
     });
+    
+    const data = await res.json();
+
     if (res.ok) {
       router.push("/auth/signin");
     } else {
-      const errorData = await res.json();
-      alert(errorData.message || "가입 실패");
+      console.error("Signup failed:", data);
+      alert(data.message || "가입 실패");
     }
   };
   return (
