@@ -11,7 +11,12 @@ export default function SignUpPage() {
       body: JSON.stringify(Object.fromEntries(formData)),
       headers: { "Content-Type": "application/json" },
     });
-    if (res.ok) router.push("/auth/signin"); else alert("가입 실패");
+    if (res.ok) {
+      router.push("/auth/signin");
+    } else {
+      const errorData = await res.json();
+      alert(errorData.message || "가입 실패");
+    }
   };
   return (
     <div className="max-w-md mx-auto mt-20 p-8 border rounded-2xl shadow-lg">
