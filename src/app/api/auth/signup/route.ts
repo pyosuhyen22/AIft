@@ -4,13 +4,13 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const body = await req.json();
+    const { name, email, password } = body;
+    console.log("Signup attempt for email:", email);
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { message: "이메일과 비밀번호를 입력해주세요." },
-        { status: 400 }
-      );
+    if (!process.env.DATABASE_URL) {
+      console.error("CRITICAL: DATABASE_URL is missing!");
+      return NextResponse.json({ message: "서버 설정 오류 (DB_URL 누락)" }, { status: 500 });
     }
 
     // 중복 사용자 확인

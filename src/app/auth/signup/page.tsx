@@ -6,19 +6,30 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      body: JSON.stringify(Object.fromEntries(formData)),
-      headers: { "Content-Type": "application/json" },
-    });
-    
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: { "Content-Type": "application/json" },
+      });
+      
+      const contentType = res.headers.get("content-type");
+      let data;
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      }
 
-    if (res.ok) {
-      router.push("/auth/signin");
-    } else {
-      console.error("Signup failed:", data);
-      alert(data.message || "가입 실패");
+      if (res.ok) {
+        alert("가입 성공! 로그인해주세요.");
+        router.push("/auth/signin");
+      } else {
+        const errorMessage = data?.message || `오류 발생 (상태 코드: ${res.status})`;
+        console.error("Signup failed:", data || res.statusText);
+        alert(errorMessage);
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+      alert("네트워크 오류가 발생했습니다. 서버가 실행 중인지 확인해주세요.");
     }
   };
   return (
