@@ -19,7 +19,13 @@ export default async function PostListPage({ searchParams }: Props) {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <h1 className="text-3xl font-bold">전체 게시글</h1>
-      <div className="grid gap-6">{posts.map((post) => <PostCard key={post.id} post={post} />)}</div>
+      <div className="grid gap-6">
+        {posts.length > 0 ? (
+          posts.map((post) => <PostCard key={post.id} post={post} />)
+        ) : (
+          <p className="text-gray-500 py-20 text-center border rounded-xl">검색 결과가 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 }
