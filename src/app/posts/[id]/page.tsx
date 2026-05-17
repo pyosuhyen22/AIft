@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { User, ThumbsUp, MessageSquare } from "lucide-react";
+import { User } from "lucide-react";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 
