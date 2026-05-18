@@ -6,11 +6,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, email, password } = body;
-    console.log("Signup attempt for email:", email);
 
-    if (!process.env.DATABASE_URL) {
-      console.error("CRITICAL: DATABASE_URL is missing!");
-      return NextResponse.json({ message: "서버 설정 오류 (DB_URL 누락)" }, { status: 500 });
+    if (!name || !email || !password) {
+      return NextResponse.json({ message: "모든 필드를 입력해주세요." }, { status: 400 });
     }
 
     // 중복 사용자 확인
@@ -43,12 +41,8 @@ export async function POST(req: Request) {
     );
   } catch (error: any) {
     console.error("Signup error details:", error);
-    // Prisma 관련 에러 메시지 세분화
-    if (error.code === 'P2002') {
-      return NextResponse.json({ message: "이미 사용 중인 이메일입니다." }, { status: 400 });
-    }
     return NextResponse.json(
-      { message: `서버 오류: ${error.message || "알 수 없는 오류"}` },
+      { message: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." },
       { status: 500 }
     );
   }
