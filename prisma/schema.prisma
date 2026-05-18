@@ -1,5 +1,11 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql", url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model User {
   id        String    @id @default(cuid())
@@ -45,5 +51,6 @@ model Like {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId String
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
   @@unique([userId, postId])
 }
